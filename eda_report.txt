@@ -1,0 +1,192 @@
+
+======================================================================
+RAW DATA
+======================================================================
+Shape: (7043, 21)
+Duplicate rows: 0
+Duplicate customerIDs: 0
+
+======================================================================
+MISSING VALUES (before)
+======================================================================
+TotalCharges    11
+
+Rows with missing TotalCharges:
+      customerID  tenure  MonthlyCharges  TotalCharges
+488   4472-LVYGI       0           52.55           NaN
+753   3115-CZMZD       0           20.25           NaN
+936   5709-LVOEQ       0           80.85           NaN
+1082  4367-NUYAO       0           25.75           NaN
+1340  1371-DWPAZ       0           56.05           NaN
+3331  7644-OMVMY       0           19.85           NaN
+3826  3213-VVOLG       0           25.35           NaN
+4380  2520-SGTTA       0           20.00           NaN
+5218  2923-ARZLG       0           19.70           NaN
+6670  4075-WKNIU       0           73.35           NaN
+6754  2775-SEFEE       0           61.90           NaN
+
+======================================================================
+MISSING VALUES (after)
+======================================================================
+Total missing cells: 0
+
+======================================================================
+DTYPES
+======================================================================
+customerID              str
+gender                  str
+SeniorCitizen           str
+Partner                 str
+Dependents              str
+tenure                int64
+PhoneService            str
+MultipleLines           str
+InternetService         str
+OnlineSecurity          str
+OnlineBackup            str
+DeviceProtection        str
+TechSupport             str
+StreamingTV             str
+StreamingMovies         str
+Contract                str
+PaperlessBilling        str
+PaymentMethod           str
+MonthlyCharges      float64
+TotalCharges        float64
+Churn                   str
+
+======================================================================
+NUMERIC SUMMARY
+======================================================================
+        tenure  MonthlyCharges  TotalCharges
+count  7043.00         7043.00       7043.00
+mean     32.37           64.76       2279.73
+std      24.56           30.09       2266.79
+min       0.00           18.25          0.00
+25%       9.00           35.50        398.55
+50%      29.00           70.35       1394.55
+75%      55.00           89.85       3786.60
+max      72.00          118.75       8684.80
+
+======================================================================
+CHURN DISTRIBUTION
+======================================================================
+       count    pct
+Churn              
+No      5174  73.46
+Yes     1869  26.54
+
+======================================================================
+CHURN RATE BY CATEGORY (%)
+======================================================================
+
+gender:
+gender
+Female    26.9
+Male      26.2
+
+SeniorCitizen:
+SeniorCitizen
+Yes    41.7
+No     23.6
+
+Partner:
+Partner
+No     33.0
+Yes    19.7
+
+Dependents:
+Dependents
+No     31.3
+Yes    15.5
+
+PhoneService:
+PhoneService
+Yes    26.7
+No     24.9
+
+MultipleLines:
+MultipleLines
+Yes                 28.6
+No                  25.0
+No phone service    24.9
+
+InternetService:
+InternetService
+Fiber optic    41.9
+DSL            19.0
+No              7.4
+
+OnlineSecurity:
+OnlineSecurity
+No                     41.8
+Yes                    14.6
+No internet service     7.4
+
+OnlineBackup:
+OnlineBackup
+No                     39.9
+Yes                    21.5
+No internet service     7.4
+
+DeviceProtection:
+DeviceProtection
+No                     39.1
+Yes                    22.5
+No internet service     7.4
+
+TechSupport:
+TechSupport
+No                     41.6
+Yes                    15.2
+No internet service     7.4
+
+StreamingTV:
+StreamingTV
+No                     33.5
+Yes                    30.1
+No internet service     7.4
+
+StreamingMovies:
+StreamingMovies
+No                     33.7
+Yes                    29.9
+No internet service     7.4
+
+Contract:
+Contract
+Month-to-month    42.7
+One year          11.3
+Two year           2.8
+
+PaperlessBilling:
+PaperlessBilling
+Yes    33.6
+No     16.3
+
+PaymentMethod:
+PaymentMethod
+Electronic check             45.3
+Mailed check                 19.1
+Bank transfer (automatic)    16.7
+Credit card (automatic)      15.2
+
+======================================================================
+NUMERIC MEANS BY CHURN
+======================================================================
+       tenure  MonthlyCharges  TotalCharges
+Churn                                      
+No      37.57           61.27       2549.91
+Yes     17.98           74.44       1531.80
+
+======================================================================
+CORRELATION (numeric + churn flag)
+======================================================================
+                tenure  MonthlyCharges  TotalCharges  Churn
+tenure           1.000           0.248         0.826 -0.352
+MonthlyCharges   0.248           1.000         0.651  0.193
+TotalCharges     0.826           0.651         1.000 -0.198
+Churn           -0.352           0.193        -0.198  1.000
+
+Plots saved to /home/atharv/Desktop/projects/majorProjectChurn/plots/
+Cleaned data saved to /home/atharv/Desktop/projects/majorProjectChurn/data/data_clean.csv

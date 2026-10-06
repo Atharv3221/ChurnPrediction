@@ -1,0 +1,71 @@
+
+======================================================================
+FEATURES
+======================================================================
+34 features, 7 continuous, 27 binary
+gender                                     int64
+SeniorCitizen                              int64
+Partner                                    int64
+Dependents                                 int64
+tenure                                     int64
+PhoneService                               int64
+MultipleLines                              int64
+OnlineSecurity                             int64
+OnlineBackup                               int64
+DeviceProtection                           int64
+TechSupport                                int64
+StreamingTV                                int64
+StreamingMovies                            int64
+PaperlessBilling                           int64
+MonthlyCharges                           float64
+AvgMonthlyCharge                         float64
+ChargeIncrease                           float64
+NumAddonServices                           int64
+NumServices                                int64
+IsAutoPayment                              int64
+IsNewCustomer                              int64
+LivesAlone                                 int64
+FiberNoSupport                             int64
+LogTotalCharges                          float64
+InternetService_DSL                        int64
+InternetService_Fiber_optic                int64
+InternetService_No                         int64
+Contract_Month_to_month                    int64
+Contract_One_year                          int64
+Contract_Two_year                          int64
+PaymentMethod_Bank_transfer_automatic      int64
+PaymentMethod_Credit_card_automatic        int64
+PaymentMethod_Electronic_check             int64
+PaymentMethod_Mailed_check                 int64
+
+======================================================================
+SPLIT
+======================================================================
+Train: (5634, 34), churn rate 0.265
+Test:  (1409, 34), churn rate 0.265
+
+======================================================================
+STANDARDIZED (train, continuous) - expect mean 0, std 1
+======================================================================
+                  mean  std
+tenure            -0.0  1.0
+MonthlyCharges    -0.0  1.0
+LogTotalCharges   -0.0  1.0
+AvgMonthlyCharge  -0.0  1.0
+ChargeIncrease    -0.0  1.0
+NumAddonServices   0.0  1.0
+NumServices       -0.0  1.0
+
+======================================================================
+NORMALIZED (train) - expect range [0, 1]
+======================================================================
+                  min  max
+tenure            0.0  1.0
+MonthlyCharges    0.0  1.0
+LogTotalCharges   0.0  1.0
+AvgMonthlyCharge  0.0  1.0
+ChargeIncrease    0.0  1.0
+NumAddonServices  0.0  1.0
+NumServices       0.0  1.0
+
+Saved datasets to /home/atharv/Desktop/projects/majorProjectChurn/data/processed/ and scalers to /home/atharv/Desktop/projects/majorProjectChurn/artifacts/scalers.joblib

@@ -1,8 +1,10 @@
 """Feature extraction, encoding and scaling for churn prediction.
 
 Reads the cleaned data produced by eda.py, engineers features, encodes
-categoricals, does a stratified train/test split and fits scalers on the
-training set only (no test leakage). Writes three versions of the features:
+categoricals, does a stratified 70/15/15 train/validation/test split and fits
+scalers on the training set only (no validation/test leakage). The validation
+set is for model selection and threshold tuning; the test set is touched only
+for final evaluation. Writes three versions of the features:
 
   raw   - engineered + encoded, unscaled (tree models, readable SHAP values)
   std   - continuous features standardized with StandardScaler (z-scores)
@@ -21,7 +23,8 @@ CLEAN_PATH = ROOT / "data" / "data_clean.csv"
 OUT_DIR = ROOT / "data" / "processed"
 ARTIFACT_DIR = ROOT / "artifacts"
 
-TEST_SIZE = 0.2
+TEST_SIZE = 0.15
+VAL_SIZE = 0.15
 RANDOM_STATE = 42
 
 ADDON_SERVICES = [
@@ -107,23 +110,27 @@ def main():
     print(f"{X.shape[1]} features, {len(continuous)} continuous, {X.shape[1] - len(continuous)} binary")
     print(X.dtypes.to_string())
 
-    X_train, X_test, y_train, y_test = train_test_split(
+    X_rest, X_test, y_rest, y_test = train_test_split(
         X, y, test_size=TEST_SIZE, stratify=y, random_state=RANDOM_STATE
     )
+    X_train, X_val, y_train, y_val = train_test_split(
+        X_rest, y_rest, test_size=VAL_SIZE / (1 - TEST_SIZE), stratify=y_rest, random_state=RANDOM_STATE
+    )
     section("SPLIT")
-    print(f"Train: {X_train.shape}, churn rate {y_train.mean():.3f}")
-    print(f"Test:  {X_test.shape}, churn rate {y_test.mean():.3f}")
+    for name, Xs, ys in [("Train", X_train, y_train), ("Val", X_val, y_val), ("Test", X_test, y_test)]:
+        print(f"{name + ':':6} {Xs.shape}, churn rate {ys.mean():.3f}")
 
     # Standardize continuous features only; binary 0/1 flags stay as-is so
     # their coefficients / SHAP values remain interpretable.
     std_scaler = StandardScaler().fit(X_train[continuous])
-    X_train_std, X_test_std = X_train.copy(), X_test.copy()
-    X_train_std[continuous] = std_scaler.transform(X_train[continuous])
-    X_test_std[continuous] = std_scaler.transform(X_test[continuous])
-
     norm_scaler = MinMaxScaler().fit(X_train)
-    X_train_norm = pd.DataFrame(norm_scaler.transform(X_train), columns=X.columns, index=X_train.index)
-    X_test_norm = pd.DataFrame(norm_scaler.transform(X_test), columns=X.columns, index=X_test.index)
+    splits = {"train": X_train, "val": X_val, "test": X_test}
+    std, norm = {}, {}
+    for name, frame in splits.items():
+        std[name] = frame.copy()
+        std[name][continuous] = std_scaler.transform(frame[continuous])
+        norm[name] = pd.DataFrame(norm_scaler.transform(frame), columns=X.columns, index=frame.index)
+    X_train_std, X_train_norm = std["train"], norm["train"]
 
     section("STANDARDIZED (train, continuous) - expect mean 0, std 1")
     print(X_train_std[continuous].agg(["mean", "std"]).round(3).T.to_string())
@@ -132,15 +139,12 @@ def main():
 
     OUT_DIR.mkdir(parents=True, exist_ok=True)
     ARTIFACT_DIR.mkdir(exist_ok=True)
-    outputs = {
-        "X_train_raw": X_train, "X_test_raw": X_test,
-        "X_train_std": X_train_std, "X_test_std": X_test_std,
-        "X_train_norm": X_train_norm, "X_test_norm": X_test_norm,
-    }
-    for name, frame in outputs.items():
-        frame.to_csv(OUT_DIR / f"{name}.csv", index=False)
-    y_train.to_csv(OUT_DIR / "y_train.csv", index=False)
-    y_test.to_csv(OUT_DIR / "y_test.csv", index=False)
+    for name in splits:
+        splits[name].to_csv(OUT_DIR / f"X_{name}_raw.csv", index=False)
+        std[name].to_csv(OUT_DIR / f"X_{name}_std.csv", index=False)
+        norm[name].to_csv(OUT_DIR / f"X_{name}_norm.csv", index=False)
+    for name, ys in [("train", y_train), ("val", y_val), ("test", y_test)]:
+        ys.to_csv(OUT_DIR / f"y_{name}.csv", index=False)
 
     joblib.dump(
         {

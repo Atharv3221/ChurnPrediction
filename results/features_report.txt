@@ -41,8 +41,9 @@ PaymentMethod_Mailed_check                 int64
 ======================================================================
 SPLIT
 ======================================================================
-Train: (5634, 34), churn rate 0.265
-Test:  (1409, 34), churn rate 0.265
+Train: (4929, 34), churn rate 0.265
+Val:   (1057, 34), churn rate 0.266
+Test:  (1057, 34), churn rate 0.265
 
 ======================================================================
 STANDARDIZED (train, continuous) - expect mean 0, std 1
@@ -50,10 +51,10 @@ STANDARDIZED (train, continuous) - expect mean 0, std 1
                   mean  std
 tenure            -0.0  1.0
 MonthlyCharges    -0.0  1.0
-LogTotalCharges   -0.0  1.0
-AvgMonthlyCharge  -0.0  1.0
-ChargeIncrease    -0.0  1.0
-NumAddonServices   0.0  1.0
+LogTotalCharges    0.0  1.0
+AvgMonthlyCharge   0.0  1.0
+ChargeIncrease     0.0  1.0
+NumAddonServices  -0.0  1.0
 NumServices       -0.0  1.0
 
 ======================================================================

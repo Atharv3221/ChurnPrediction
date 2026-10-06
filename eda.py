@@ -11,7 +11,7 @@ import seaborn as sns
 ROOT = Path(__file__).parent
 DATA_PATH = ROOT / "data" / "data.csv"
 CLEAN_PATH = ROOT / "data" / "data_clean.csv"
-PLOTS_DIR = ROOT / "plots"
+PLOTS_DIR = ROOT / "results" / "plots"
 
 NUMERIC_COLS = ["tenure", "MonthlyCharges", "TotalCharges"]
 

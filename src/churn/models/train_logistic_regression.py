@@ -16,6 +16,7 @@ Steps:
 Writes artifacts/logistic_regression.joblib, artifacts/logistic_regression_probs.csv
 and results/logistic_regression.md.
 """
+import sys
 from pathlib import Path
 
 import joblib
@@ -28,9 +29,11 @@ from sklearn.metrics import (
 )
 from sklearn.utils.class_weight import compute_class_weight
 
-ROOT = Path(__file__).parent
-DATA = ROOT / "data" / "processed"
-ART = ROOT / "artifacts"
+sys.path.insert(0, str(Path(__file__).resolve().parents[2]))  # put src/ on the path when run as a script
+from churn.paths import ARTIFACTS_DIR, PROCESSED_DIR, RESULTS_DIR  # noqa: E402
+
+DATA = PROCESSED_DIR
+ART = ARTIFACTS_DIR
 RANDOM_STATE = 42
 C_GRID = [0.001, 0.01, 0.1, 1.0, 10.0, 100.0]
 THRESHOLDS = np.round(np.arange(0.10, 0.90 + 1e-9, 0.01), 2)
@@ -303,7 +306,7 @@ Reduction:
 - **Ranking quality** is unchanged by the threshold: test ROC-AUC {test_opt['ROC-AUC']:.3f}, PR-AUC {test_opt['PR-AUC']:.3f} (churn base rate {n_pos_test / te.sum():.3f}).
 - **Is the optimized threshold useful?** {"Yes. When a missed churner costs much more than a retention offer, trading the extra false positives for fewer missed churners is worthwhile, and test F2 improves, which shows the validation-chosen threshold generalizes." if test_opt['F2-score'] > test_050['F2-score'] else "The F2 gain seen on validation did not carry over to test, so the threshold should be revisited with the explicit cost matrix."} The final operating point should come from the cost-sensitive stage (FN cost vs FP cost) using the saved validation probabilities.
 """
-    (ROOT / "results" / "logistic_regression.md").write_text(md)
+    (RESULTS_DIR / "logistic_regression.md").write_text(md)
 
 
 if __name__ == "__main__":

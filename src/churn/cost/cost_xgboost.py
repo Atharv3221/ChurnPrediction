@@ -11,6 +11,8 @@ Outputs:
 import argparse
 import json
 import os
+import sys
+from pathlib import Path
 
 import matplotlib
 
@@ -22,12 +24,15 @@ from sklearn.metrics import average_precision_score, roc_auc_score  # noqa: E402
 
 MODEL = "xgboost"
 TITLE = "XGBoost"
-ROOT = os.path.dirname(os.path.abspath(__file__))
-PROBS = os.path.join(ROOT, "artifacts", f"{MODEL}_probs.csv")
-METRICS = os.path.join(ROOT, "artifacts", f"{MODEL}_metrics.json")
-OUT_JSON = os.path.join(ROOT, "artifacts", f"cost_{MODEL}.json")
-OUT_PLOT = os.path.join(ROOT, "results", "plots", f"cost_curve_{MODEL}.png")
-OUT_MD = os.path.join(ROOT, "results", f"cost_{MODEL}.md")
+
+sys.path.insert(0, str(Path(__file__).resolve().parents[2]))  # put src/ on the path when run as a script
+from churn.paths import ARTIFACTS_DIR, PLOTS_DIR, RESULTS_DIR  # noqa: E402
+
+PROBS = ARTIFACTS_DIR / f"{MODEL}_probs.csv"
+METRICS = ARTIFACTS_DIR / f"{MODEL}_metrics.json"
+OUT_JSON = ARTIFACTS_DIR / f"cost_{MODEL}.json"
+OUT_PLOT = PLOTS_DIR / f"cost_curve_{MODEL}.png"
+OUT_MD = RESULTS_DIR / f"cost_{MODEL}.md"
 
 GRID = np.round(np.arange(0.01, 0.991, 0.01), 2)
 SENS_C_FN = [100, 200, 300, 500, 1000, 2000]

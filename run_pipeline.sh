@@ -4,15 +4,16 @@
 set -euo pipefail
 cd "$(dirname "$0")"
 PY=venv/bin/python
+SRC=src/churn
 mkdir -p results
 
-$PY eda.py > results/eda_report.txt
-$PY features.py > results/features_report.txt
+$PY $SRC/eda.py > results/eda_report.txt
+$PY $SRC/features.py > results/features_report.txt
 for m in logistic_regression mlp xgboost; do
-    $PY train_$m.py
+    $PY $SRC/models/train_$m.py
 done
 for m in logistic_regression mlp xgboost; do
-    $PY cost_$m.py "$@"
+    $PY $SRC/cost/cost_$m.py "$@"
 done
-$PY cost_compare.py "$@"
-$PY build_all_results.py
+$PY $SRC/cost/cost_compare.py "$@"
+$PY $SRC/reporting/build_all_results.py

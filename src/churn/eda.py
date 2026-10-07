@@ -1,4 +1,5 @@
 """Missing-value handling and basic EDA for the Telco customer churn dataset."""
+import sys
 from pathlib import Path
 
 import matplotlib
@@ -8,10 +9,11 @@ import matplotlib.pyplot as plt
 import pandas as pd
 import seaborn as sns
 
-ROOT = Path(__file__).parent
-DATA_PATH = ROOT / "data" / "data.csv"
-CLEAN_PATH = ROOT / "data" / "data_clean.csv"
-PLOTS_DIR = ROOT / "results" / "plots"
+sys.path.insert(0, str(Path(__file__).resolve().parents[1]))  # put src/ on the path when run as a script
+from churn.paths import CLEAN_DATA, PLOTS_DIR, RAW_DATA  # noqa: E402
+
+DATA_PATH = RAW_DATA
+CLEAN_PATH = CLEAN_DATA
 
 NUMERIC_COLS = ["tenure", "MonthlyCharges", "TotalCharges"]
 

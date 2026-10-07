@@ -10,6 +10,7 @@ for final evaluation. Writes three versions of the features:
   std   - continuous features standardized with StandardScaler (z-scores)
   norm  - all features min-max normalized to [0, 1]
 """
+import sys
 from pathlib import Path
 
 import joblib
@@ -18,10 +19,12 @@ import pandas as pd
 from sklearn.model_selection import train_test_split
 from sklearn.preprocessing import MinMaxScaler, StandardScaler
 
-ROOT = Path(__file__).parent
-CLEAN_PATH = ROOT / "data" / "data_clean.csv"
-OUT_DIR = ROOT / "data" / "processed"
-ARTIFACT_DIR = ROOT / "artifacts"
+sys.path.insert(0, str(Path(__file__).resolve().parents[1]))  # put src/ on the path when run as a script
+from churn.paths import ARTIFACTS_DIR, CLEAN_DATA, PROCESSED_DIR  # noqa: E402
+
+CLEAN_PATH = CLEAN_DATA
+OUT_DIR = PROCESSED_DIR
+ARTIFACT_DIR = ARTIFACTS_DIR
 
 TEST_SIZE = 0.15
 VAL_SIZE = 0.15

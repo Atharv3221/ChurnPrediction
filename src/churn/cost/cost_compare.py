@@ -7,14 +7,17 @@ over test customers to show whether the cost differences are meaningful.
 """
 import argparse
 import json
+import sys
 from itertools import combinations
 from pathlib import Path
 
 import numpy as np
 import pandas as pd
 
-ROOT = Path(__file__).parent
-ART = ROOT / "artifacts"
+sys.path.insert(0, str(Path(__file__).resolve().parents[2]))  # put src/ on the path when run as a script
+from churn.paths import ARTIFACTS_DIR, RESULTS_DIR  # noqa: E402
+
+ART = ARTIFACTS_DIR
 MODELS = {"logistic_regression": "Logistic Regression", "mlp": "MLP", "xgboost": "XGBoost"}
 N_BOOT = 5000
 SEED = 42
@@ -117,7 +120,7 @@ Test cost {table.iloc[0]['Test cost']:,.0f} ({table.iloc[0]['Test cost/customer'
 
 A difference is significant only if its 95% CI excludes 0.
 """
-    (ROOT / "results" / "cost_comparison.md").write_text(md)
+    (RESULTS_DIR / "cost_comparison.md").write_text(md)
     print(md)
 
 

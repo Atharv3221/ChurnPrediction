@@ -8,6 +8,8 @@ Usage: venv/bin/python cost_mlp.py [--c-fn 500] [--c-fp 100]
 import argparse
 import json
 import os
+import sys
+from pathlib import Path
 
 import joblib
 import matplotlib
@@ -20,12 +22,15 @@ from sklearn.metrics import average_precision_score, roc_auc_score
 
 MODEL = "mlp"
 MODEL_NAME = "MLP"
-ROOT = os.path.dirname(os.path.abspath(__file__))
-PROBS = os.path.join(ROOT, "artifacts", f"{MODEL}_probs.csv")
-MODEL_FILE = os.path.join(ROOT, "artifacts", f"{MODEL}.joblib")
-OUT_JSON = os.path.join(ROOT, "artifacts", f"cost_{MODEL}.json")
-OUT_PLOT = os.path.join(ROOT, "results", "plots", f"cost_curve_{MODEL}.png")
-OUT_MD = os.path.join(ROOT, "results", f"cost_{MODEL}.md")
+
+sys.path.insert(0, str(Path(__file__).resolve().parents[2]))  # put src/ on the path when run as a script
+from churn.paths import ARTIFACTS_DIR, PLOTS_DIR, RESULTS_DIR  # noqa: E402
+
+PROBS = ARTIFACTS_DIR / f"{MODEL}_probs.csv"
+MODEL_FILE = ARTIFACTS_DIR / f"{MODEL}.joblib"
+OUT_JSON = ARTIFACTS_DIR / f"cost_{MODEL}.json"
+OUT_PLOT = PLOTS_DIR / f"cost_curve_{MODEL}.png"
+OUT_MD = RESULTS_DIR / f"cost_{MODEL}.md"
 GRID = np.round(np.arange(0.01, 0.9901, 0.01), 2)
 SENS_CFN = [100, 200, 300, 500, 1000, 2000]
 

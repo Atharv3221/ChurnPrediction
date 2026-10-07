@@ -1,3 +1,5 @@
 venv
 .claude
 artifacts
+__pycache__/
+*.pyc

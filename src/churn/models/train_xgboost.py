@@ -14,6 +14,7 @@ artifacts/xgboost_probs.csv and results/xgboost.md.
 """
 import itertools
 import json
+import sys
 from pathlib import Path
 
 import numpy as np
@@ -24,9 +25,11 @@ from sklearn.metrics import (
     fbeta_score, precision_score, recall_score, roc_auc_score,
 )
 
-ROOT = Path(__file__).parent
-DATA = ROOT / "data" / "processed"
-ART = ROOT / "artifacts"
+sys.path.insert(0, str(Path(__file__).resolve().parents[2]))  # put src/ on the path when run as a script
+from churn.paths import ARTIFACTS_DIR, PROCESSED_DIR, RESULTS_DIR  # noqa: E402
+
+DATA = PROCESSED_DIR
+ART = ARTIFACTS_DIR
 RANDOM_STATE = 42
 THRESHOLDS = np.round(np.arange(0.10, 0.90 + 1e-9, 0.01), 2)
 
@@ -316,7 +319,7 @@ Test set, same model, threshold 0.50 vs the validation-selected threshold {thr:.
 - **Generalization:** train/val/test ROC-AUC is {auc['train']:.3f} / {auc['val']:.3f} / {auc['test']:.3f}. The train-test gap ({auc['train'] - auc['test']:.3f}) is much smaller than the baseline's 0.077, so the shallower trees, subsampling, regularization and early stopping (stopping at iteration {o['best_iteration']}) removed most of the overfitting. Validation AUC is slightly below test AUC; with about 280 churners per split, a difference of this size is within normal sampling variation between the two held-out sets. Test PR-AUC is {to['pr_auc']:.3f} (churn base rate 0.265).
 - **Suitability for the cost-sensitive stage:** XGBoost is a good fit. It supports class weighting natively, its ranking quality (test ROC-AUC {auc['test']:.3f}) is in line with the baseline models on this dataset (0.84-0.85), the threshold can be moved freely to match the business cost ratio, and TreeExplainer gives exact, fast SHAP values for the explainability deliverable. Since the baseline models all ranked customers about equally well, the final choice between models should rest on the cost-based comparison on this shared split and on interpretability, not on AUC alone.
 """
-    (ROOT / "results" / "xgboost.md").write_text(md)
+    (RESULTS_DIR / "xgboost.md").write_text(md)
 
 
 if __name__ == "__main__":

@@ -2,16 +2,20 @@
 
 Stitches together results/README.md (overview + progress), the EDA and feature
 reports, the per-model reports and the cost-sensitive reports. Headings are
-demoted one level and links are rewritten so the file works from the project root.
+demoted one level. The file is written to results/, so links to plots/ and the
+other reports stay relative and need no rewriting.
 Rerun after the pipeline (run_pipeline.sh does this automatically).
 """
 import re
+import sys
 from datetime import date
 from pathlib import Path
 
-ROOT = Path(__file__).parent
-RES = ROOT / "results"
-OUT = ROOT / "all-result.md"
+sys.path.insert(0, str(Path(__file__).resolve().parents[2]))  # put src/ on the path when run as a script
+from churn.paths import RESULTS_DIR  # noqa: E402
+
+RES = RESULTS_DIR
+OUT = RESULTS_DIR / "all-result.md"
 
 MODELS = [("logistic_regression", "Logistic Regression"), ("mlp", "MLP"), ("xgboost", "XGBoost")]
 EDA_PLOTS = [
@@ -24,16 +28,13 @@ EDA_PLOTS = [
 
 
 def embed_md(path, demote=1):
-    """Return a results/ markdown file with headings demoted and links rewritten for the root."""
+    """Return a results/ markdown file with headings demoted."""
     out, in_code = [], False
     for line in path.read_text().splitlines():
         if line.lstrip().startswith("```"):
             in_code = not in_code
         elif not in_code and re.match(r"#{1,5} ", line):
             line = "#" * demote + line
-        if not in_code:
-            line = line.replace("](plots/", "](results/plots/")
-            line = re.sub(r"\]\((?!https?:|results/|#)([\w\-]+\.(?:md|txt))\)", r"](results/\1)", line)
         out.append(line)
     return "\n".join(out).strip() + "\n"
 
@@ -66,7 +67,7 @@ def main():
     parts.append(f"## {sections[1][0]}\n")
     parts.append("### Plots\n")
     for fname, caption in EDA_PLOTS:
-        parts.append(f"**{caption}**\n\n![{caption}](results/plots/{fname})\n")
+        parts.append(f"**{caption}**\n\n![{caption}](plots/{fname})\n")
     parts.append("### Full EDA report (missing values, summary statistics, churn rate by category, correlations)\n")
     parts.append(embed_txt(RES / "eda_report.txt"))
 

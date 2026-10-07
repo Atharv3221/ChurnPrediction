@@ -8,6 +8,7 @@ maximizing F2 over 0.10..0.90 (step 0.01); the test set is used only once for
 the final report. Writes artifacts/mlp.joblib, artifacts/mlp_probs.csv, results/mlp.md.
 """
 import inspect
+import sys
 from pathlib import Path
 
 import joblib
@@ -21,9 +22,11 @@ from sklearn.metrics import (
 from sklearn.neural_network import MLPClassifier
 from sklearn.utils.class_weight import compute_sample_weight
 
-ROOT = Path(__file__).parent
-DATA = ROOT / "data" / "processed"
-ART = ROOT / "artifacts"
+sys.path.insert(0, str(Path(__file__).resolve().parents[2]))  # put src/ on the path when run as a script
+from churn.paths import ARTIFACTS_DIR, PROCESSED_DIR, RESULTS_DIR  # noqa: E402
+
+DATA = PROCESSED_DIR
+ART = ARTIFACTS_DIR
 RANDOM_STATE = 42
 
 PARAMS = dict(
@@ -283,7 +286,7 @@ Results on the test set ({n['test']} customers, {pos['test']} churners):
 - **Generalization:** Train ROC-AUC is {tr_auc:.3f}, compared with {valopt['roc_auc']:.3f} on validation and {test05['roc_auc']:.3f} on test. The small network, L2 penalty and early stopping (stopped after {model.n_iter_} epochs) keep overfitting low. The validation AUC is a little lower than the test AUC, which reflects normal variation between two samples of about 1,050 customers each.
 - **Suitability for the cost-sensitive stage:** The MLP fits this stage. It supports sample weights directly, its probabilities give a usable threshold, and it reaches high churn recall with a PR-AUC in a competitive range. Its weaknesses are that it is harder to explain than Logistic Regression and that results vary somewhat with `random_state` because of the random weight initialization. For SHAP it needs KernelExplainer or DeepExplainer instead of fast exact explainers. It is a reasonable candidate, but it should be chosen over the Logistic Regression and XGBoost models only if it clearly beats them on test recall/F2 and PR-AUC under the same threshold rule.
 """
-    (ROOT / "results" / "mlp.md").write_text(md)
+    (RESULTS_DIR / "mlp.md").write_text(md)
     print(f"\nthreshold={thr:.2f}; test FN {test05['fn']} -> {testopt['fn']} ({fn_red} fewer, {fn_pct:.1f}%), "
           f"FP {test05['fp']} -> {testopt['fp']}")
     print("Wrote artifacts/mlp.joblib, artifacts/mlp_probs.csv, results/mlp.md")

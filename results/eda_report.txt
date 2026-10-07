@@ -189,4 +189,4 @@ TotalCharges     0.826           0.651         1.000 -0.198
 Churn           -0.352           0.193        -0.198  1.000
 
 Plots saved to /home/atharv/Desktop/projects/majorProjectChurn/results/plots/
-Cleaned data saved to /home/atharv/Desktop/projects/majorProjectChurn/data/data_clean.csv
+Cleaned data saved to /home/atharv/Desktop/projects/majorProjectChurn/data/interim/data_clean.csv

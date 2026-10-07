@@ -1,0 +1,17 @@
+[theme]
+base = "light"
+primaryColor = "#2F6FB3"
+backgroundColor = "#FFFFFF"
+secondaryBackgroundColor = "#F4F7FB"
+textColor = "#1F2933"
+font = "sans serif"
+# Additions beyond the base palette: semibold headings, the reserved savings green, thin borders.
+headingFontWeights = 600
+greenColor = "#2F855A"
+borderColor = "#E2E8F0"
+
+[client]
+toolbarMode = "minimal"
+
+[browser]
+gatherUsageStats = false

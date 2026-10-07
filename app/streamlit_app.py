@@ -163,10 +163,12 @@ def style_chart(fig, height=420):
 
 
 def show_table(df, formats, highlight_col=None, highlight_value=None, height=None):
-    # st.dataframe shows missing numbers as "None", so swap them for a dash before formatting.
-    df = df.astype(object).where(df.notna(), "–")
-    formats = {c: (lambda v, f=f: v if isinstance(v, str) else f.format(v)) for c, f in formats.items()}
-    styler = df.style.format(formats)
+    # Format numbers to text up front (missing values become a dash) so every column has a single
+    # type; a column mixing floats and "–" fails Arrow serialisation.
+    df = df.copy()
+    for c, f in formats.items():
+        df[c] = [f.format(v) if pd.notna(v) else "–" for v in df[c]]
+    styler = df.style
     if highlight_col is not None:
         styler = styler.apply(
             lambda row: [f"background-color: {ROW_HIGHLIGHT}" if row[highlight_col] == highlight_value else ""

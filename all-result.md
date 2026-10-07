@@ -1,6 +1,6 @@
 # Customer Churn Prediction – All Results
 
-_Generated 2026-10-06 by `build_all_results.py` from the reports in `results/`. Do not edit by hand; rerun the script instead._
+_Generated 2026-10-07 by `build_all_results.py` from the reports in `results/`. Do not edit by hand; rerun the script instead._
 
 ## Contents
 

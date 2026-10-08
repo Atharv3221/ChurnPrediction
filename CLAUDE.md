@@ -19,7 +19,7 @@ src/churn/reporting/         build_all_results.py (writes results/all-result.md)
 artifacts/                   model binaries, *_probs.csv (split,y_true,proba), cost_*.json, xgboost_metrics.json
 results/                     every human-readable output: *.md, *.txt, plots/, README.md, all-result.md
 app/streamlit_app.py         read-only dashboard over artifacts/ and results/
-run_pipeline.sh              runs every stage in order
+run_pipeline.sh              runs every stage in order (run_pipeline.bat / run_app.bat on Windows)
 ```
 
 ## How to run
@@ -29,7 +29,9 @@ run_pipeline.sh              runs every stage in order
 venv/bin/streamlit run app/streamlit_app.py
 ```
 Each script also runs on its own from the project root, e.g. `venv/bin/python src/churn/cost/cost_mlp.py --c-fn 500 --c-fp 100`.
-Use `venv/bin/python`. After installing a package, refresh `requirements.txt` with `venv/bin/pip freeze`.
+Use `venv/bin/python`. `requirements.txt` lists direct dependencies only (pinned); add a new direct import there by hand,
+never `pip freeze` (it pins platform-specific packages such as nvidia-nccl that break Windows installs).
+Keep `run_pipeline.sh` and `run_pipeline.bat` in sync when stages change.
 
 ## Rules
 - Split is stratified 70/15/15, `random_state=42`. Validation is used for ALL tuning and threshold choice;

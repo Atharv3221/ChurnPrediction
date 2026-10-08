@@ -28,14 +28,25 @@ src/churn/
 artifacts/                     models, saved probabilities, cost/metric JSON
 results/                       reports (*.md, *.txt), plots/, all-result.md
 app/streamlit_app.py           dashboard
-run_pipeline.sh
+run_pipeline.sh                full pipeline (Linux/macOS)
+run_pipeline.bat               full pipeline (Windows)
+run_app.bat                    start the dashboard (Windows)
 ```
 
 ## Setup
 
+Requires Python 3.12. `requirements.txt` lists only the direct dependencies; pip installs the rest for your platform.
+
+Linux / macOS:
 ```bash
 python3 -m venv venv
 venv/bin/pip install -r requirements.txt
+```
+
+Windows (Command Prompt or PowerShell):
+```bat
+py -3.12 -m venv venv
+venv\Scripts\pip install -r requirements.txt
 ```
 
 ## Run the pipeline
@@ -45,6 +56,13 @@ venv/bin/pip install -r requirements.txt
 ./run_pipeline.sh --c-fn 800 --c-fp 50     # real business costs
 ```
 
+On Windows, use the batch file with the same flags (in PowerShell, prefix it with `.\`):
+
+```bat
+run_pipeline.bat
+run_pipeline.bat --c-fn 800 --c-fp 50
+```
+
 Individual stages run from the project root, with the same flags:
 
 ```bash
@@ -52,10 +70,15 @@ venv/bin/python src/churn/cost/cost_logistic_regression.py --c-fn 500 --c-fp 100
 venv/bin/python src/churn/cost/cost_compare.py --c-fn 500 --c-fp 100
 ```
 
+On Windows, use `venv\Scripts\python` instead, and set `PYTHONUTF8=1` first (`set PYTHONUTF8=1` in Command
+Prompt, `$env:PYTHONUTF8=1` in PowerShell) so the reports, which contain non-ASCII characters, are written as UTF-8.
+The batch files already do this.
+
 ## Start the app
 
 ```bash
-venv/bin/streamlit run app/streamlit_app.py
+venv/bin/streamlit run app/streamlit_app.py      # Linux / macOS
+run_app.bat                                      # Windows
 ```
 
 Then open http://localhost:8501. The app is read-only. It loads the saved artifacts and results, and recomputes
